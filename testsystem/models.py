@@ -30,8 +30,9 @@ class User(models.Model):
         verbose_name_plural = verbose_name
 
 class Paper(models.Model):
-    paper_text = models.CharField('试卷内容', max_length=30)
-    
+    paper_text = models.CharField('试卷标题', max_length=30)
+    pub_date = models.DateTimeField('发布日期')
+
     def __str__(self):
         return self.paper_text
     
@@ -105,7 +106,7 @@ class Score(models.Model):
     score = models.DecimalField('分数', max_digits=5,decimal_places=2,default=None)
 
     def __str__(self):
-        return '{}-{}:{}'.format(self.paper_id,self.user_id,self.score)
+        return '{}-{}'.format(self.paper_id,self.user_id)
 
     class Meta:
         verbose_name = '成绩'

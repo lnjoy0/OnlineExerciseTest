@@ -1,0 +1,9 @@
+{% if paper_list %}
+    <ul>
+    {% for paper in paper_list %}
+        <li><a href="{% url 'testsystem:paper' paper.id %}">{{paper.paper_text}}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No paper</p>
+{% endif %}
