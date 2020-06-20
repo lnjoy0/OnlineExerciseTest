@@ -23,17 +23,12 @@ class PaperAdmin(admin.ModelAdmin):
     search_fields = ['paper_text']
     list_filter = ['pub_date']
 
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('user_id', 'name', 'email', 'identity', 'password')
-    list_filter = ['identity']
-    search_fields = ['user_id']
-
 class ScoreAdmin(admin.ModelAdmin):
     list_display = ('score', 'user_id', 'paper_id')
     list_display_links = ('score', 'user_id', 'paper_id')
 
-admin.site.register(User, UserAdmin)
 admin.site.register(Paper, PaperAdmin)
 admin.site.register(SC_choice)
 admin.site.register(MC_choice)
 admin.site.register(Score, ScoreAdmin)
+admin.site.register(models.User)

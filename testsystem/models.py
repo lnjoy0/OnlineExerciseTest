@@ -16,18 +16,26 @@ SYMBOLS = (
 )
 
 class User(models.Model):
-    user_id = models.CharField('用户编号', max_length=20, primary_key=True)
-    name = models.CharField('姓名', max_length=10)
-    password = models.CharField('密码', max_length=256)
-    email = models.EmailField('电子邮箱', unique=True)
-    identity = models.CharField('身份', max_length=7, choices=IDENTITIES)
+
+    gender = (
+        ('male', "男"),
+        ('female', "女"),
+    )
+
+    name = models.CharField('姓名',max_length=128)
+    idcard = models.CharField('学号',max_length=128,primary_key=True)
+    password = models.CharField('密码',max_length=256)
+    email = models.EmailField('邮箱',unique=True)
+    sex = models.CharField('性别',max_length=32, choices=gender, default="男")
+    c_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return '{}({})'.format(self.user_id,self.name)
+        return self.name
 
     class Meta:
+        ordering = ["-c_time"]
         verbose_name = "用户"
-        verbose_name_plural = verbose_name
+        verbose_name_plural = "用户"
 
 class Paper(models.Model):
     paper_text = models.CharField('试卷标题', max_length=30)
@@ -113,24 +121,3 @@ class Score(models.Model):
         verbose_name_plural = verbose_name
         ordering = ['paper_id', '-score']
 
-class User(models.Model):
-
-    gender = (
-        ('male', "男"),
-        ('female', "女"),
-    )
-
-    name = models.CharField(max_length=128)
-    idcard = models.CharField(max_length=128,unique=True)
-    password = models.CharField(max_length=256)
-    email = models.EmailField(unique=True)
-    sex = models.CharField(max_length=32, choices=gender, default="男")
-    c_time = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ["-c_time"]
-        verbose_name = "用户"
-        verbose_name_plural = "用户"

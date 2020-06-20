@@ -1,5 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render,redirect, get_object_or_404
 from .models import Paper
+import hashlib
+from . import models
+from . import forms
 
 # Create your views here.
 def index(request):
@@ -27,7 +30,7 @@ def login(request):
                 user = models.User.objects.get(idcard=idcard)
             except:
                 message = '用户不存在！'
-                return render(request, 'login/login.html', {'message': message})
+                return render(request, 'testsystem/login.html', {'message': message})
             if user.password == hash_code(password):
                 request.session['is_login'] = True
                 request.session['user_id'] = user.id
@@ -37,10 +40,10 @@ def login(request):
                 return redirect('/index/')
             else:
                 message = '密码不正确！'
-                return render(request, 'login/login.html', {'message': message})
+                return render(request, 'testsystem/login.html', {'message': message})
         else:
-            return render(request, 'login/login.html', {'message': message})
-    return render(request, 'login/login.html')
+            return render(request, 'testsystem/login.html', {'message': message})
+    return render(request, 'testsystem/login.html')
 
 def register(request):
     if request.session.get('is_login', None):
@@ -59,16 +62,16 @@ def register(request):
 
             if password1 != password2:
                 message = '两次输入的密码不同！'
-                return render(request, 'login/register.html', locals())
+                return render(request, 'testsystem/register.html', locals())
             else:
                 same_name_user = models.User.objects.filter(idcard=idcard)
                 if same_name_user:
                     message = '学号已经存在'
-                    return render(request, 'login/register.html', locals())
+                    return render(request, 'testsystem/register.html', locals())
                 same_email_user = models.User.objects.filter(email=email)
                 if same_email_user:
                     message = '该邮箱已经被注册了！'
-                    return render(request, 'login/register.html', locals())
+                    return render(request, 'testsystem/register.html', locals())
 
                 new_user = models.User()
                 new_user.name = username
@@ -80,9 +83,9 @@ def register(request):
 
                 return redirect('/login/')
         else:
-            return render(request, 'login/register.html', locals())
+            return render(request, 'testsystem/register.html', locals())
     register_form = forms.RegisterForm()
-    return render(request, 'login/register.html', locals())
+    return render(request, 'testsystem/register.html', locals())
     
 def logout(request):
     if not request.session.get('is_login', None):
