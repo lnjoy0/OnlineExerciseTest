@@ -33,7 +33,6 @@ def login(request):
                 return render(request, 'testsystem/login.html', {'message': message})
             if user.password == hash_code(password):
                 request.session['is_login'] = True
-                request.session['user_id'] = user.id
                 request.session['user_name'] = username
                 request.session['user_idcard'] = user.idcard
                 print(username,idcard, password)
