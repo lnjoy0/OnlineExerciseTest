@@ -1,15 +1,23 @@
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Paper
+from .models import Paper,Score
 import hashlib
 from . import models
 from . import forms
+from itertools import chain
 
 # Create your views here.
 def index(request):
     if not request.session.get('is_login', None):#未登录则限制访问
         return redirect('/login/')
     paper_list = Paper.objects.order_by('-id')
-    return render(request, 'testsystem/index.html',{'paper_list': paper_list})
+    score_list = Score.objects.filter(id=(request.user.id))
+    #score_list = Score.objects.all()
+    for i in score_list:
+        print(i.id)
+    print(request.user.id)
+    # for i in chain(paper_list,score_list):
+    #     print(i)
+    return render(request, 'testsystem/index.html',{'paper_list': paper_list,'score_list': score_list})
 
 def paper(request, paper_id):
     paper = get_object_or_404(Paper, pk=paper_id)

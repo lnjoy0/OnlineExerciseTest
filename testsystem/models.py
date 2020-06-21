@@ -23,7 +23,7 @@ class User(models.Model):
     )
 
     name = models.CharField('姓名',max_length=128)
-    idcard = models.CharField('学号',max_length=128,primary_key=True)
+    idcard = models.CharField('学号',max_length=128,unique=True)
     password = models.CharField('密码',max_length=256)
     email = models.EmailField('邮箱',unique=True)
     sex = models.CharField('性别',max_length=32, choices=gender, default="男")
