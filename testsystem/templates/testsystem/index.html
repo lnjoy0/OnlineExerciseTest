@@ -34,10 +34,10 @@
                         </div>
                         <div class="clients-list">
                             <ul class="nav nav-tabs">
-                                <span class="pull-right small text-muted">{{paper.count}} 个试卷</span>
-                                <li class="active"><a data-toggle="tab" href="#tab-1"> 已完成</a>
+                                <span class="pull-right small text-muted">{{paper_count}}个试卷</span>
+                                <li class="active"><a data-toggle="tab" href="#tab-1"> 未完成</a>
                                 </li>
-                                <li class=""><a data-toggle="tab" href="#tab-2"> 未完成</a>
+                                <li class=""><a data-toggle="tab" href="#tab-2"> 已完成</a>
                                 </li>
                             </ul>
                             <div class="tab-content">
@@ -46,15 +46,13 @@
                                         <div class="table-responsive">
                                             <table class="table table-striped table-hover">
                                                 <tbody>
-                                                    {% if paper_list %}
-                                                        {% for paper in paper_list %}
-                                                            <tr><!-- 循环-->
-                                                                <td class="client-avatar"><img alt="image" src="{% static 'login/image/paper.jpg' %}"> </td>
-                                                                <td><a href="{% url 'testsystem:paper' paper.id %}">{{paper.paper_text}}</a></td>
-                                                                <td> {{paper.pub_date}} {{request.user}}</td>    
-                                                            </tr>
-                                                        {% endfor %}
-                                                    {% endif %}
+                                                    {% for paper in paper_nofinish %}
+                                                    <tr>
+                                                        <td class="client-avatar"><img alt="image" src="{% static 'login/image/paper.jpg' %}"> </td>
+                                                        <td><a href="{% url 'testsystem:paper' paper.id %}">{{paper.paper_text}}</a></td>
+                                                        <td> 发布时间{{paper.pub_date}}</td>    
+                                                    </tr>
+                                                    {% endfor %}
                                                 </tbody>
                                             </table>
                                         </div>
@@ -65,10 +63,13 @@
                                         <div class="table-responsive">
                                             <table class="table table-striped table-hover">
                                                 <tbody>
+                                                    {% for paper in score_list %}
                                                     <tr>
-                                                        <td><a data-toggle="tab" href="#company-1" class="client-link">已做完的试卷名字</a>
-                                                        </td>
+                                                        <td class="client-avatar"><img alt="image" src="{% static 'login/image/paper.jpg' %}"> </td>
+                                                        <td><a href="{% url 'testsystem:paper' paper.paper_id.id %}">{{paper.paper_id.paper_text}}</a></td>
+                                                        <td> 发布时间：{{paper.paper_id.pub_date}}</td>    
                                                     </tr>
+                                                    {% endfor %}
                                                 </tbody>
                                             </table>
                                         </div>

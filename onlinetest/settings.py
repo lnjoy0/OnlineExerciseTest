@@ -27,10 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+FILE_ROOT = os.path.join(BASE_DIR,"upload/")
 
 # Application definition
 
 INSTALLED_APPS = [
+    'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,3 +121,10 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# simpleui theme
+SIMPLEUI_DEFAULT_THEME = 'highdmin.css'
+SIMPLEUI_HOME_INFO = False
+SIMPLEUI_HOME_QUICK = False
+SIMPLEUI_LOGO ='http://sec.guet.edu.cn/themes/core/static/img/logo.png'

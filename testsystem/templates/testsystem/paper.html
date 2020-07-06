@@ -1,1 +1,385 @@
-<t1>greate</t1>
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>{{paper.paper_text}}</title>
+<link href="{% static '/test/css/main.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static '/test/css/iconfont.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static '/test/css/test.css' %}" rel="stylesheet" type="text/css" />
+{% if passed %}
+	<script type="text/javascript">
+		obj = JSON.parse('{{answer|safe}}')
+	</script>
+{% endif %}
+<style>
+.hasBeenAnswer {
+	background: #5d9cec;
+	color:#fff;
+}
+</style>
+
+</head>
+
+<body>
+	<div class="main">
+		<!--nr start-->
+		<div class="test_main">
+			<div class="nr_left">
+				<div class="test">
+					<form action="/{{paper.id}}/cal/" method="post">
+					{% csrf_token %}
+						<div class="test_title">
+							<p class="test_time">
+								<i class="icon iconfont"></i>
+								{% if passed %}
+									<b>{{answer_timing}}</b>
+								{% else %}
+									<b class="alt-1">{{paper.time}}</b>
+								{% endif %}
+							</p>
+							{% if passed %}
+								<font><a href="/index/">返回</a></font>
+							{% else %}
+								<font><input type="submit" name="test_jiaojuan" value="交卷"></font>
+							{% endif %}
+						</div>
+						<div class="test_content">
+							<div class="test_content_title">
+								<h2>单选题</h2>
+								<p>
+									<span>共</span><i class="content_lit">{{paper.sc_question_set.all.count}}</i><span>题，</span><span>合计</span><i class="content_fs">{{sc_value}}</i><span>分</span>
+								</p>
+							</div>
+						</div>
+						<div class="test_content_nr">
+							<ul>
+								{% if paper.sc_question_set %}
+									{% for sc_question in paper.sc_question_set.all %}
+										<li id="sc_question{{forloop.counter}}">
+											<div class="test_content_nr_tt">
+												<i>{{forloop.counter}}</i><span>({{sc_question.value}}分)</span><font>{{sc_question.SC_text}}</font><b class="icon iconfont"></b>
+											</div>
+
+											<div class="test_content_nr_main">
+												<ul>
+													{% if sc_question.sc_choice_set %}
+														{% for sc_choice in sc_question.sc_choice_set.all %}
+															<li class="option">
+																
+																	<input type="radio" class="radioOrCheck" name="sc_question{{sc_question.id}}"
+																		id="sc_choice{{sc_choice.id}}" value="{{sc_choice.choice_symbol}}"
+																	/>
+																
+																<label for="sc_choice{{sc_choice.id}}">
+																	{{sc_choice.choice_symbol}}.
+																	<p class="ue" style="display: inline;">{{sc_choice.choice_text}}</p>
+																</label>
+
+															</li>
+														{% endfor %}
+													{% endif %}													
+												</ul>
+											</div>
+										{% if passed %}
+											<script>
+												if(obj.sc_question{{sc_question.id}} == '{{sc_question.SC_solution}}'){
+													document.write("<div class=\"answer_right\">答案：\
+													<span style='font-size: 18px;margin-right: 12px;'>{{sc_question.SC_solution}}</span>\
+													<span style='font-size: 12px;'>你答对了</span></div>")
+												}
+												else{
+													document.write("<div class=\"answer_false\">答案：\
+													<span style='font-size: 18px;margin-right: 12px;'>{{sc_question.SC_solution}}</span>\
+													<span style='font-size: 12px;'>你答错了</span></div>")
+												}
+												
+												var div1 = document.querySelectorAll('input[name="sc_question{{sc_question.id}}"]');
+												for(var i=0; i<div1.length; i++){
+													if(div1[i].value==obj.sc_question{{sc_question.id}}){
+														div1[i].setAttribute('checked','true');
+													}
+												}
+											</script>
+										{% endif %}
+										</li>
+									{% endfor %}
+								{% else %}
+									<p>No question</p>
+								{% endif %}
+							</ul>
+						</div>                                
+					
+						<div class="test_content">
+							<div class="test_content_title">
+								<h2>多选题</h2>
+								<p>
+									<span>共</span><i class="content_lit">{{paper.mc_question_set.all.count}}</i><span>题，</span><span>合计</span><i class="content_fs">{{mc_value}}</i><span>分</span>
+								</p>
+							</div>
+						</div>
+						<div class="test_content_nr">
+							<ul>
+								{% if paper.mc_question_set %}
+									{% for mc_question in paper.mc_question_set.all%}
+										<li id="mc_question{{forloop.counter}}">
+											<div class="test_content_nr_tt">
+												<i>{{forloop.counter}}</i><span>({{mc_question.value}}分)</span><font>{{mc_question.MC_text}}</font><b class="icon iconfont"></b>
+											</div>
+
+											<div class="test_content_nr_main">
+												<ul>
+													{% if mc_question.mc_choice_set %}
+														{% for mc_choice in mc_question.mc_choice_set.all%}
+															<li class="option">
+																
+																	<input type="checkbox" class="radioOrCheck" name="mc_question{{mc_question.id}}"
+																		id="mc_choice{{mc_choice.id}}" value="{{mc_choice.choice_symbol}}"
+																	/>
+																
+																<label for="mc_choice{{mc_choice.id}}">
+																	{{mc_choice.choice_symbol}}.
+																	<p class="ue" style="display: inline;">{{mc_choice.choice_text}}</p>
+																</label>
+															</li>
+														{% endfor %}
+													{% endif %}
+																										
+												</ul>
+											</div>
+										{% if passed %}
+											<script>
+												if(obj.mc_question{{mc_question.id}}.join('') == '{{mc_question.MC_solution}}'){
+													document.write("<div class=\"answer_right\">答案：\
+													<span style='font-size: 18px;margin-right: 12px;'>{{mc_question.MC_solution}}</span>\
+													<span style='font-size: 12px;'>你答对了</span></div>")
+												}
+												else{
+													document.write("<div class=\"answer_false\">答案：\
+													<span style='font-size: 18px;margin-right: 12px;'>{{mc_question.MC_solution}}</span>\
+													<span style='font-size: 12px;'>你答错了</span></div>")
+												}
+												var lst = obj.mc_question{{mc_question.id}};
+												var div1 = document.querySelectorAll('input[name="mc_question{{mc_question.id}}"]');
+												for(var i=0; i<div1.length; i++){
+													for(var j=0; j<lst.length; j++){
+														if(div1[i].value == lst[j]){
+															div1[i].setAttribute('checked','true');
+														}
+													}
+												}
+											</script>
+										{% endif %}
+										</li>
+									{% endfor %}
+								{% else %}
+									<p>No question</p>
+								{% endif %}
+							</ul>
+						</div>
+
+						<div class="test_content">
+							<div class="test_content_title">
+								<h2>填空题</h2>
+								<p>
+									<span>共</span><i class="content_lit">{{paper.blank_question_set.all.count}}</i><span>题，</span><span>合计</span><i class="content_fs">{{blank_value}}</i><span>分</span>
+								</p>
+							</div>
+						</div>
+						<div class="test_content_nr">
+							<ul>
+								{% if paper.blank_question_set %}
+									{% for blank_question in paper.blank_question_set.all%}
+										<li id="blank_question{{forloop.counter}}">
+											<div class="test_content_nr_tt">
+												<i>{{forloop.counter}}</i><span>({{blank_question.value}}分)</span><font>{{blank_question.blank_text}}</font><b class="icon iconfont"></b>
+											</div>
+
+											<div class="test_content_nr_main">
+												<input class="blank" type="text" name="blank_question{{blank_question.id}}"
+													id="blank_question{{forloop.counter}}" style="width:700px; height:30px; padding-left:5px;"
+												/>
+											</div>
+										{% if passed %}
+											<script>
+												if(obj.blank_question{{blank_question.id}} == '{{blank_question.blank_solution}}'){
+													document.write("<div class=\"answer_right\">答案：\
+													<span style='font-size: 18px;margin-right: 12px;'>{{blank_question.blank_solution}}</span>\
+													<span style='font-size: 12px;'>你答对了</span></div>")
+												}
+												else{
+													document.write("<div class=\"answer_false\">答案：\
+													<span style='font-size: 18px;margin-right: 12px;'>{{blank_question.blank_solution}}</span>\
+													<span style='font-size: 12px;'>你答错了</span></div>")
+												}
+												debugger;
+												document.getElementsByName("blank_question{{blank_question.id}}")[0].value = obj.blank_question{{blank_question.id}};
+												document.getElementsByName("blank_question{{blank_question.id}}")[0].disabled = "disabled";
+											</script>
+										{% endif %}
+										</li>
+									{% endfor %}
+								{% else %}
+									<p>No question</p>
+								{% endif %}
+							</ul>
+						</div>
+						
+					</form>
+				</div>
+
+			</div>
+			<div class="nr_right">
+				<div class="nr_rt_main">
+					<div class="rt_nr1">
+						<div class="rt_nr1_title">
+							<h1>
+								<i class="icon iconfont"></i>答题卡
+							</h1>
+							<p class="test_time">
+								<i class="icon iconfont"></i>
+								{% if passed %}
+									<b>{{answer_timing}}</b>
+								{% else %}
+									<b class="alt-1">{{paper.time}}</b>
+								{% endif %}
+							</p>
+						</div>
+						
+						<div class="rt_content">
+							<div class="rt_content_tt">
+								<h2>单选题</h2>
+								<p>
+									<span>共</span><i class="content_lit">{{paper.sc_question_set.all.count}}</i><span>题</span>
+								</p>
+							</div>
+							<div class="rt_content_nr answerSheet">
+								<ul>
+									{% if paper.sc_question_set %}
+										{% for sc_question in paper.sc_question_set.all %}
+											<li><a href="#sc_question{{forloop.counter}}">{{forloop.counter}}</a></li>
+										{% endfor %}
+									{% endif %}
+																			
+								</ul>
+							</div>
+						</div>
+					
+						<div class="rt_content">
+							<div class="rt_content_tt">
+								<h2>多选题</h2>
+								<p>
+									<span>共</span><i class="content_lit">{{paper.mc_question_set.all.count}}</i><span>题</span>
+								</p>
+							</div>
+							<div class="rt_content_nr answerSheet">
+								<ul>
+									{% if paper.mc_question_set %}
+										{% for mc_question in paper.mc_question_set.all %}
+											<li><a href="#mc_question{{forloop.counter}}">{{forloop.counter}}</a></li>
+										{% endfor %}
+									{% endif %}
+
+								</ul>
+							</div>
+						</div>
+
+						<div class="rt_content">
+							<div class="rt_content_tt">
+								<h2>填空题</h2>
+								<p>
+									<span>共</span><i class="content_lit">{{paper.blank_question_set.all.count}}</i><span>题</span>
+								</p>
+							</div>
+							<div class="rt_content_nr answerSheet">
+								<ul>
+									{% if paper.blank_question_set %}
+										{% for blank_question in paper.blank_question_set.all %}
+											<li><a href="#blank_question{{forloop.counter}}">{{forloop.counter}}</a></li>
+										{% endfor %}
+									{% endif %}
+
+								</ul>
+							</div>
+						</div>
+						{% if passed %}
+							<div class="rt_content">
+								<div class="ibox-content">
+									<h2>成绩：{{score}}</h2>
+								</div>
+							</div>
+						{% endif %}
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--nr end-->
+		<div class="foot"></div>
+	</div>
+
+	<script src="{% static '/test/js/jquery-1.11.3.min.js' %}"></script>
+	<script src="{% static 'jquery.easy-pie-chart.js' %}"></script>
+	<!--时间js-->
+	<script src="{% static 'test/js/jquery.countdown.js' %}"></script>
+	<script>
+		window.jQuery(function($) {
+			"use strict";
+			
+			$('time').countDown({
+				with_separators : false
+			});
+			$('.alt-1').countDown({
+				css_class : 'countdown-alt-1'
+			});
+			$('.alt-2').countDown({
+				css_class : 'countdown-alt-2'
+			});
+
+		});
+
+		$(function() {
+			$('li.option label').click(function() {
+			debugger;
+				var examId = $(this).closest('.test_content_nr_main').closest('li').attr('id'); // 得到题目ID
+				var cardLi = $('a[href=#' + examId + ']'); // 根据题目ID找到对应答题卡
+				// 设置已答题
+				if(!cardLi.hasClass('hasBeenAnswer')){
+					cardLi.addClass('hasBeenAnswer');
+				}
+				
+			});
+		});
+
+		$(function() {
+			$('input.blank').bind("input propertychange change",function() {
+			debugger;
+				var examId = $(this).closest('li').attr('id'); // 得到题目ID
+				var cardLi = $('a[href=#' + examId + ']'); // 根据题目ID找到对应答题卡
+				// 设置已答题
+				if(!cardLi.hasClass('hasBeenAnswer')){
+					cardLi.addClass('hasBeenAnswer');
+				}
+
+			});
+		});
+
+		$(function(){
+			$('form').submit(function(){
+				var timing = $('<input name="timing" type="hidden"/>');
+				timing.attr('value', $('time').attr('datetime'));
+				$('form').append(timing);
+				
+			})
+		})
+
+	</script>
+
+<div style="text-align:center;">
+</div>
+
+</body>
+
+</html>

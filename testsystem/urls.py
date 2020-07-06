@@ -10,5 +10,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('logout/', views.logout, name='logout'),
     path('<int:paper_id>/', views.paper, name='paper'),
-    path('<int:paper_id>/cal', views.cal_score, name='calculate'),
+    path('<int:paper_id>/cal/', views.cal_score, name='calculate'),
+    path('forgetpwd/',views.forgetpwd,name='forgetpwd'),
+    path('download/',views.download,name='download')
 ]
