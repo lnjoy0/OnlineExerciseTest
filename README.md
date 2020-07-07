@@ -6,4 +6,21 @@
 	pip install django
 	pip install django-simpleui
 
+下载后需要重新迁移数据库：
+
+	py manage.py makemigrations
+	py manage.py migrate
+
+启动：
+
+	py manage.py runserver 80
+
+登陆后台：
+
+	访问 /admin
+
+创建教师账户：
+
+	py manage.py createsuperuser
+
 张老师的python课作业
