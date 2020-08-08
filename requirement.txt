@@ -1,0 +1,4 @@
+pymysql==0.9.3
+openpyxl==3.0.4
+django==3.0.7
+django-simpleui==4.0.3

@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-FILE_ROOT = os.path.join(BASE_DIR,"upload/")
+#FILE_ROOT = os.path.join(BASE_DIR, "upload")
+FILE_ROOT = "upload"
 
 # Application definition
 
